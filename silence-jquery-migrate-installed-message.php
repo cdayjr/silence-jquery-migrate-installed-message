@@ -10,12 +10,12 @@
  * Plugin Name: Silence jQuery Migrate Installed Message
  * Plugin URI:  https://github.com/cdayjr/silence-jquery-migrate-installed-message
  * Description: Silence the "JQMIGRATE: Migrate is installed" console message.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      Chad Wade Day, Jr.
  * Author URI:  https://www.chadwadedayjr.info
  * Text Domain: silence-jquery-migrate-installed-message
  * License:     MIT
- * License URI: https://raw.githubusercontent.com/cdayjr/silence-jquery-migrate-installed-message/master/LICENSE
+ * License URI: https://opensource.org/licenses/MIT
  */
 
 defined('ABSPATH') or die('No direct script access allowed.');
@@ -28,9 +28,10 @@ function silence_jquery_migrate_installed_message()
         <<<'EOD'
 window.console.log2 = window.console.log;
 window.console.log = function(entry) {
-    if (entry.indexOf("JQMIGRATE: Migrate is installed") === -1) {
-        window.console.log2(entry);
+    if (typeof entry === "string" && entry.indexOf("JQMIGRATE: Migrate is installed") >= 0) {
+        return;
     }
+    window.console.log2(entry);
 }
 EOD
         ,
@@ -48,4 +49,3 @@ EOD
 }
 add_action('wp_enqueue_scripts', 'silence_jquery_migrate_installed_message');
 add_action('admin_enqueue_scripts', 'silence_jquery_migrate_installed_message');
-
